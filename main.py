@@ -1,5 +1,20 @@
 from fastapi import FastAPI 
 from fastapi.params import Body
+from pydantic import BaseModel
+
+
+"""
+Implement schema through which we can define 
+what we want our data to look like
+"""
+#This post class allows us to post stuff from the frontend based on a well defined schema or database model
+#In such a way a user will only send us the data we defined in the model and nothing else.
+#In addition, we are able to define what datatype of the data we want for each of our properties
+#We achieve such behaviour by inheriting from the BaseModel class imported from the pydantic library
+class Post(BaseModel):
+    title:str
+    content:str
+
 
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
 
@@ -24,6 +39,6 @@ def get_posts():
     return {"data":"This is your first retrieved post"}
 
 @app.post("/createpost")
-def create_post(cont: dict = Body):
+def create_post(cont: Post):
     print(cont)
     return {"results":cont}
