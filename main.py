@@ -15,7 +15,7 @@ Asynchronous Server Gateway interface
 #This takes us to the root page of our api http://127.0.0.1:8000
 @app.get("/")
 def root():
-    return {"message":"Hello world this is my first time learning about apis"}
+    return {"message":"Welcome to my start up"}
 #...All this is referred to as a path operation
 
 #this takes us to post url http://127.0.0.1:8000/posts
@@ -23,6 +23,7 @@ def root():
 def get_posts():
     return {"data":"This is your first retrieved post"}
 
-@app.get("/createpost")
-def create_post():
-    return {"results"}
+@app.post("/createpost")
+def create_post(cont: dict = Body):
+    print(cont)
+    return {"results":cont}
