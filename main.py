@@ -1,0 +1,23 @@
+from fastapi import FastAPI 
+
+app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
+
+"""
+fastapi is an asynchronous capable python programming language framework 
+This simply means that a webserver forwards requests to it using the ASGI convention
+Asynchronous Server Gateway interface
+"""
+#...path operation OR route(synonym) in other frameworks
+"""Async here means something that's going to take some amount of time such as making an api call"""
+"""The decorator changes the behaviour of our function so that is acts as an api end point"""
+
+#This takes us to the root page of our api http://127.0.0.1:8000
+@app.get("/")
+def root():
+    return {"message":"Hello world this is my first time learning about apis"}
+#...All this is referred to as a path operation
+
+#this takes us to post url http://127.0.0.1:8000/posts
+@app.get("/posts")
+def get_posts():
+    return {"data":"This is your first retrieved post"}
