@@ -1,4 +1,5 @@
 from fastapi import FastAPI 
+from fastapi.params import Body
 
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
 
@@ -21,3 +22,7 @@ def root():
 @app.get("/posts")
 def get_posts():
     return {"data":"This is your first retrieved post"}
+
+@app.get("/createpost")
+def create_post():
+    return {"results"}
