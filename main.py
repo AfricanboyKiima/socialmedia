@@ -43,5 +43,5 @@ def get_posts():
 
 @app.post("/createpost")
 def create_post(cont: Post):
-    print(cont)
+    print(cont.published)#viewing what this value turns to, if 'true', then user allows to be published else if false then it wont be published,if either of them is defined, then it defaults to true
     return {"results":cont}
