@@ -7,13 +7,16 @@ from pydantic import BaseModel
 Implement schema through which we can define 
 what we want our data to look like
 """
-#This post class allows us to post stuff from the frontend based on a well defined schema or database model
+#This post class allows us to post stuff from the frontend based on a well defined schema or data model
 #In such a way a user will only send us the data we defined in the model and nothing else.
 #In addition, we are able to define what datatype of the data we want for each of our properties
 #We achieve such behaviour by inheriting from the BaseModel class imported from the pydantic library
 class Post(BaseModel):
     title:str
     content:str
+    #add published post that is optional with which a user may decide to publish a post or not
+    published : bool = True
+     
 
 
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
@@ -30,7 +33,7 @@ Asynchronous Server Gateway interface
 #This takes us to the root page of our api http://127.0.0.1:8000
 @app.get("/")
 def root():
-    return {"message":"Welcome to my start up"}
+    return {"message":"Welcome to my start up. My name is Kiima Samuel"}
 #...All this is referred to as a path operation
 
 #this takes us to post url http://127.0.0.1:8000/posts
