@@ -1,6 +1,8 @@
 from fastapi import FastAPI 
 from fastapi.params import Body
 from pydantic import BaseModel
+from typing import Optional
+from random import randrange
 
 
 """
@@ -14,12 +16,15 @@ what we want our data to look like
 class Post(BaseModel):
     title:str
     content:str
-    #add published post that is optional with which a user may decide to publish a post or not
     published : bool = True
-     
-
+    rating: Optional[int] = None#a completely optional field 
 
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
+
+
+my_posts = [{"title":"title of post 1","content":"Content of post1","id":1},
+            
+            {"title":"title of post 2","content":"Content of post 2","id":2}]
 
 """
 fastapi is an asynchronous capable python programming language framework 
@@ -39,9 +44,40 @@ def root():
 #this takes us to post url http://127.0.0.1:8000/posts
 @app.get("/posts")
 def get_posts():
-    return {"data":"This is your first retrieved post"}
+    return {"data":my_posts}
 
-@app.post("/createpost")
-def create_post(cont: Post):
-    print(cont.published)#viewing what this value turns to, if 'true', then user allows to be published else if false then it wont be published,if either of them is defined, then it defaults to true
-    return {"results":cont}
+#http://127.0.0.1:8000/createposts 
+@app.post("/posts")
+def create_post(post: Post):
+    post_dict = post.dict()
+    post_dict["id"] = randrange(0,  100000000000)#randrange imported from random module
+    my_posts.append(post_dict)
+    return {"data":post_dict}
+
+
+
+@app.get('/')
+def welcome():
+    return {"message":"Welcome to my person api testing end point"}
+
+
+
+"""
+
+#Created person schema 
+class Person(BaseModel):
+    first_name:str
+    last_name:str
+    email:Optional[str] = None#this is nullable
+    about:str
+
+@app.get("/person")
+def get_person():
+    return {"data":"You've accessd a person"}
+
+@app.post("/person")
+def person(var:Person):
+    my_posts.append(var)
+    print(my_posts)
+    return {"data":var}
+"""
