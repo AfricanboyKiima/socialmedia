@@ -39,6 +39,10 @@ def find_posts(id):
         if p['id'] == id:
             return p
 
+def find_index_post(id):
+    for i,p in enumerate(my_posts):
+        if p['id'] == id:
+            return i
 
 """
 fastapi is an asynchronous capable python programming language framework 
@@ -76,7 +80,7 @@ def get_post(id:int):
         #return {"message":f"post with id :{id} was not found"}
         #it's an instance of the Response class, we then equate the status to the status HTTP_404.....
 #http://127.0.0.1:8000/posts 
-@app.post("/posts")
+@app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
    post_dict = post.dict()#convert sent post to dictionnary first before any further processing
    post_dict["id"] = randrange(0, 100000000)#when post is sent assign an id to dictionnary post automatically
@@ -86,6 +90,11 @@ def create_post(post: Post):
                             detail= f"the id : {id} you're trying to use to post already exists") 
    my_posts.append(post_dict)#after assigning id to specific post, go include it in the my_posts list
    return {"data":post_dict}
+
+@app.delete("/posts/{id}")
+def delete_post(id):
+    my_posts.pop(id)
+    return {"detail":f"you have deleted the value {cont}"}
 
 
 """
