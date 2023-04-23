@@ -1,7 +1,7 @@
-from fastapi import FastAPI 
-from fastapi.params import Body
-from pydantic import BaseModel
-from typing import Optional
+from fastapi import FastAPI, Response #access the fastapi class to instantiate objects from it
+from fastapi.params import Body#we used this to send receive posts but a user could send anything which isn't what we want 
+from pydantic import BaseModel#we then defined a schema to be able to define what we would want our data to look like
+from typing import Optional#make a field to be nullable
 from random import randrange
 
 
@@ -17,7 +17,7 @@ class Post(BaseModel):
     title:str
     content:str
     published : bool = True
-    rating: Optional[int] = None#a completely optional field 
+    rating: Optional[int] = None#a completely optional field that means it's nullable
 
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
 
@@ -25,6 +25,13 @@ app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its 
 my_posts = [{"title":"title of post 1","content":"Content of post1","id":1},
             
             {"title":"title of post 2","content":"Content of post 2","id":2}]
+
+#this returns a post based on a given id since each post has a unique value(id)
+def find_posts(id):
+    for p in my_posts:
+        if p['id'] == id:
+            return p
+
 
 """
 fastapi is an asynchronous capable python programming language framework 
@@ -35,36 +42,34 @@ Asynchronous Server Gateway interface
 """Async here means something that's going to take some amount of time such as making an api call"""
 """The decorator changes the behaviour of our function so that is acts as an api end point"""
 
+
 #This takes us to the root page of our api http://127.0.0.1:8000
 @app.get("/")
 def root():
     return {"message":"Welcome to my start up. My name is Kiima Samuel"}
 #...All this is referred to as a path operation
 
-#this takes us to post url http://127.0.0.1:8000/posts
+
+#this takes us to post url http://127.0.0.1:8000/posts it accesses all the posts
 @app.get("/posts")
 def get_posts():
     return {"data":my_posts}
+
+
+@app.get("/posts/{id}")
+def get_post(id:int, response: Response):
+    post = find_posts(id)
+    return {"post_detail":post}
+
 
 #http://127.0.0.1:8000/posts 
 @app.post("/posts")
 def create_post(post: Post):
    post_dict = post.dict()#convert sent post to dictionnary first before any further processing
-   post_dict["id"] = randrange(0, 100000000)#when post is sent assign an id to id automatically
-   my_posts.append(post)#after assigning id to specific post, go include it in the my_posts list
-   return {"data":post}
-
-
-   """ post_dict = post.dict()
-    post_dict["id"] = randrange(0,  100000000000)#randrange imported from random module
-    my_posts.append(post_dict)
-    """
-    
-
-@app.get('/')
-def welcome():
-    return {"message":"Welcome to my person api testing end point"}
-
+   post_dict["id"] = randrange(0, 100000000)#when post is sent assign an id to dictionnary post automatically
+   #this simply means that every post will have a unique id
+   my_posts.append(post_dict)#after assigning id to specific post, go include it in the my_posts list
+   return {"data":post_dict}
 
 
 """
