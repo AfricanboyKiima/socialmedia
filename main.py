@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response #access the fastapi class to instantiate objects from it
+from fastapi import FastAPI, Response, status #access the fastapi class to instantiate objects from it
 from fastapi.params import Body#we used this to send receive posts but a user could send anything which isn't what we want 
 from pydantic import BaseModel#we then defined a schema to be able to define what we would want our data to look like
 from typing import Optional#make a field to be nullable
@@ -60,7 +60,7 @@ def get_posts():
 def get_post(id:int, response: Response):
     post = find_posts(id)
     if not post:#if the post trying to be accessed isn't found, throw a status error
-        response.status_code = 404
+        response.status_code = status.HTTP_404_NOT_FOUND
     return {"post_detail":post}
 
 
