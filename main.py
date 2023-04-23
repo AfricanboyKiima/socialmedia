@@ -59,6 +59,8 @@ def get_posts():
 @app.get("/posts/{id}")
 def get_post(id:int, response: Response):
     post = find_posts(id)
+    if not post:#if the post trying to be accessed isn't found, throw a status error
+        response.status_code = 404
     return {"post_detail":post}
 
 
