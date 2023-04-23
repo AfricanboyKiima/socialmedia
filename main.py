@@ -46,15 +46,20 @@ def root():
 def get_posts():
     return {"data":my_posts}
 
-#http://127.0.0.1:8000/createposts 
+#http://127.0.0.1:8000/posts 
 @app.post("/posts")
 def create_post(post: Post):
-    post_dict = post.dict()
+   post_dict = post.dict()#convert sent post to dictionnary first before any further processing
+   post_dict["id"] = randrange(0, 100000000)#when post is sent assign an id to id automatically
+   my_posts.append(post)#after assigning id to specific post, go include it in the my_posts list
+   return {"data":post}
+
+
+   """ post_dict = post.dict()
     post_dict["id"] = randrange(0,  100000000000)#randrange imported from random module
     my_posts.append(post_dict)
-    return {"data":post_dict}
-
-
+    """
+    
 
 @app.get('/')
 def welcome():
