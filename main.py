@@ -24,7 +24,14 @@ app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its 
 
 my_posts = [{"title":"title of post 1","content":"Content of post1","id":1},
             
-            {"title":"title of post 2","content":"Content of post 2","id":2}]
+            {"title":"title of post 2","content":"Content of post 2","id":2},
+             {
+            "title": "You reap what you sow",
+            "content": "It is vital to note that working hard is very vital in the life of a man, a man's role is to provide for the family(bread winner) and so he must work extremely hard spend sleeples nights doing what he is meant to do to sustain the family. The prophet Muhammad used to seek refuge with Allah from poverty and so poverty eradication should be one of the priorities of a Muslim. In addition, one must ensure that no one plays around with him",
+            "rating": 5,
+            "id": 95453303
+        }
+            ]
 
 #this returns a post based on a given id since each post has a unique value(id)
 def find_posts(id):
@@ -61,7 +68,7 @@ def get_post(id:int):
     post = find_posts(id)
     if not post:#if you do not find the post with that specific id then raise an HTTPException
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, 
-                            detail=f"post with id :{id} was not found")
+                            detail=f"post with id: {id} was not found")
     return {"post_detail":post}
 
 #if the post trying to be accessed isn't found, throw a status error
@@ -74,6 +81,9 @@ def create_post(post: Post):
    post_dict = post.dict()#convert sent post to dictionnary first before any further processing
    post_dict["id"] = randrange(0, 100000000)#when post is sent assign an id to dictionnary post automatically
    #this simply means that every post will have a unique id
+   if post_dict["id"] in my_posts:
+       raise HTTPException(status_code= status.HTTP_409_CONFLICT,
+                            detail= f"the id : {id} you're trying to use to post already exists") 
    my_posts.append(post_dict)#after assigning id to specific post, go include it in the my_posts list
    return {"data":post_dict}
 
