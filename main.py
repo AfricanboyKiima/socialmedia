@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response, status #access the fastapi class to instantiate objects from it
+from fastapi import FastAPI, Response, status, HTTPException #access the fastapi class to instantiate objects from it
 from fastapi.params import Body#we used this to send receive posts but a user could send anything which isn't what we want 
 from pydantic import BaseModel#we then defined a schema to be able to define what we would want our data to look like
 from typing import Optional#make a field to be nullable
@@ -57,15 +57,17 @@ def get_posts():
 
 
 @app.get("/posts/{id}")
-def get_post(id:int, response: Response):
+def get_post(id:int):
     post = find_posts(id)
-    if not post:#if the post trying to be accessed isn't found, throw a status error
-        response.status_code = status.HTTP_404_NOT_FOUND#response accesses the status_code property since
-        return {"message":f"post with id :{id} was not found"}
-        #it's an instance of the Response class, we then equate the status to the status HTTP_404.....
+    if not post:#if you do not find the post with that specific id then raise an HTTPException
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, 
+                            detail=f"post with id :{id} was not found")
     return {"post_detail":post}
 
-
+#if the post trying to be accessed isn't found, throw a status error
+        #response.status_code = status.HTTP_404_NOT_FOUND#response accesses the status_code property since
+        #return {"message":f"post with id :{id} was not found"}
+        #it's an instance of the Response class, we then equate the status to the status HTTP_404.....
 #http://127.0.0.1:8000/posts 
 @app.post("/posts")
 def create_post(post: Post):
