@@ -60,7 +60,8 @@ def get_posts():
 def get_post(id:int, response: Response):
     post = find_posts(id)
     if not post:#if the post trying to be accessed isn't found, throw a status error
-        response.status_code = status.HTTP_404_NOT_FOUND
+        response.status_code = status.HTTP_404_NOT_FOUND#response accesses the status_code property since
+        #it's an instance of the Response class, we then equate the status to the status HTTP_404.....
     return {"post_detail":post}
 
 
