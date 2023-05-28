@@ -31,6 +31,7 @@ while True:#infinite loop
     try: #this is mostly likey going to cause an error so we place code that we suspect could cause an error in the try clause
         conn = psycopg2.connect(host="localhost",database="fastapi",user="postgres",password="12345678", 
         cursor_factory=RealDictCursor)
+        cur = conn.cursor()
         print("Hoorray!!!!! Connection to database established")
         break
     except Exception as error:#Here we place code on what is to happen in case a error occurs
