@@ -36,6 +36,7 @@ while True:#infinite loop
     except Exception as error:#Here we place code on what is to happen in case a error occurs
         print("Connection to database failed")
         print("Error", error)
+        time.sleep(2)
 
 
 
