@@ -1,8 +1,6 @@
-from fastapi import FastAPI, Response, status, HTTPException #access the fastapi class to instantiate objects from it
-from fastapi.params import Body#we used this to send receive posts but a user could send anything which isn't what we want 
+from fastapi import FastAPI, Response, status, HTTPException
 from pydantic import BaseModel#we then defined a schema to be able to define what we would want our data to look like
 from typing import Optional#make a field to be nullable
-from random import randrange
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
