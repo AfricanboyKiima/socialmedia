@@ -69,17 +69,16 @@ Asynchronous Server Gateway interface
 #This takes us to the root page of our api http://127.0.0.1:8000
 @app.get("/")
 def root():
-    return {"message":"Welcome to my start up. My name is Kiima Samuel"}
+    return {"message":  "People are not leveraging the power of asking, WELCOME, let me teach you how to ask"}
 #...All this is referred to as a path operation
 
 
 #this takes us to post url http://127.0.0.1:8000/posts it accesses all the posts
 @app.get("/posts")
 def get_posts():
-    cursor.execute("""SELECT * FROM posts """)
-    posts = cursor.fetchall()
+    cur.execute("""SELECT * FROM posts""")
+    posts = cur.fetchall()
     return {"data":posts}
-
 
 @app.get("/posts/{id}")
 def get_post(id:int):
