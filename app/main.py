@@ -29,7 +29,7 @@ while True:#infinite loop
     try: #this is mostly likey going to cause an error so we place code that we suspect could cause an error in the try clause
         conn = psycopg2.connect(host="localhost",database="fastapi",user="postgres",password="12345678", 
         cursor_factory=RealDictCursor)
-        cur = conn.cursor()
+        cursor = conn.cursor()
         print("Hoorray!!!!! Connection to database established")
         break
     except Exception as error:#Here we place code on what is to happen in case a error occurs
@@ -74,7 +74,7 @@ def root():
 #this takes us to post url http://127.0.0.1:8000/posts it accesses all the posts
 @app.get("/posts")
 def get_posts():
-    cur.execute("""SELECT * FROM posts""")
+    cursor.execute("""SELECT * FROM posts""")
     posts = cur.fetchall()
     return {"data":posts}
 
