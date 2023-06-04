@@ -75,7 +75,7 @@ def root():
 @app.get("/posts")
 def get_posts():
     cursor.execute("""SELECT * FROM posts""")
-    posts = cur.fetchall()
+    posts = cursor.fetchall()
     return {"data":posts}
 
 @app.get("/posts/{id}")
