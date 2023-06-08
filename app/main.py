@@ -93,10 +93,12 @@ def get_post(id:int):
 #http://127.0.0.1:8000/posts 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
-   post_dict = post.dict()#convert sent post to dictionnary first before any further processing
-   post_dict["id"] = randrange(0, 100000000)#when post is sent assign an id to dictionnary post automatically
-   my_posts.append(post_dict)#after assigning id to specific post, go include it in the my_posts list
-   return {"data":post_dict}
+   cursor.execute("""INSERT INTO posts(title,content,published) VALUES(%S,%S,%S) RETURNING * """,
+                  (post.title,post.content,post.published))
+   #post saved in variable
+   new_post = cursor.fetchone()
+   
+   return {"data":new_post}
 
 @app.delete("/posts/{id}", status_code = status.HTTP_204_NO_CONTENT)
 def delete_post(id:int):
