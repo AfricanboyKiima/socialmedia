@@ -69,7 +69,8 @@ def create_post(post: Post):
                   (post.title,post.content,post.published))
    #post saved in variable
    new_post = cursor.fetchone()
-   
+   #To save the data, we reference the connection by issuing a commit method    
+   conn.commit()
    return {"data":new_post}
 
 @app.delete("/posts/{id}", status_code = status.HTTP_204_NO_CONTENT)
