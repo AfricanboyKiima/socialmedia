@@ -5,11 +5,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 
-"""
-Implement schema through which we can define 
-what we want our data to look likels
 
-"""
 #This post class allows us to post stuff from the frontend based on a well defined schema or data model
 #In such a way a user will only send us the data we defined in the model and nothing else.
 #In addition, we are able to define what datatype of the data we want for each of our properties
@@ -24,8 +20,9 @@ class Post(BaseModel):
     published : bool = True
     rating: Optional[int] = None#a completely optional field that means it's nullable
 
+
+#database connection
 while True:#infinite loop 
-    #database connection
     try: #this is mostly likey going to cause an error so we place code that we suspect could cause an error in the try clause
         conn = psycopg2.connect(host="localhost",database="fastapi",user="postgres",password="12345678", 
         cursor_factory=RealDictCursor)
@@ -37,31 +34,6 @@ while True:#infinite loop
         print("Error", error)
         time.sleep(2)
 
-
-
-my_posts = [{"title":"title of post 1","content":"Content of post1","id":1},
-            
-            {"title":"title of post 2","content":"Content of post 2","id":2}]
-
-#this returns a post based on a given id since each post has a unique value(id)
-def find_posts(id):
-    for p in my_posts:
-        if p['id'] == id:
-            return p
-
-def find_index_post(id):
-    for i,p in enumerate(my_posts):
-        if p['id'] == id:
-            return i
-
-"""
-fastapi is an asynchronous capable python programming language framework 
-This simply means that a webserver forwards requests to it using the ASGI convention
-Asynchronous Server Gateway interface
-"""
-#...path operation OR route(synonym) in other frameworks
-"""Async here means something that's going to take some amount of time such as making an api call"""
-"""The decorator changes the behaviour of our function so that is acts as an api end point"""
 
 
 #This takes us to the root page of our api http://127.0.0.1:8000
@@ -93,7 +65,7 @@ def get_post(id:int):
 #http://127.0.0.1:8000/posts 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
-   cursor.execute("""INSERT INTO posts(title,content,published) VALUES(%S,%S,%S) RETURNING * """,
+   cursor.execute("""INSERT INTO posts(title,content,published) VALUES(%s, %s, %s) RETURNING * """,
                   (post.title,post.content,post.published))
    #post saved in variable
    new_post = cursor.fetchone()
@@ -119,25 +91,3 @@ def update_post(id:int, post:Post):
     my_posts[index] = post_dict
     return{"data":post_dict}
 
-    
-
-
-"""
-
-#Created person schema 
-class Person(BaseModel):
-    first_name:str
-    last_name:str
-    email:Optional[str] = None#this is nullable
-    about:str
-
-@app.get("/person")
-def get_person():
-    return {"data":"You've accessd a person"}
-
-@app.post("/person")
-def person(var:Person):
-    my_posts.append(var)
-    print(my_posts)
-    return {"data":var}
-"""
