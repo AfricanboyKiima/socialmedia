@@ -5,11 +5,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 
-"""
-Implement schema through which we can define 
-what we want our data to look likels
 
-"""
 #This post class allows us to post stuff from the frontend based on a well defined schema or data model
 #In such a way a user will only send us the data we defined in the model and nothing else.
 #In addition, we are able to define what datatype of the data we want for each of our properties
@@ -18,18 +14,20 @@ what we want our data to look likels
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
 
 
+#API schema
 class Post(BaseModel):
     title:str
     content:str
     published : bool = True
     rating: Optional[int] = None#a completely optional field that means it's nullable
 
+
+#database connection
 while True:#infinite loop 
-    #database connection
     try: #this is mostly likey going to cause an error so we place code that we suspect could cause an error in the try clause
         conn = psycopg2.connect(host="localhost",database="fastapi",user="postgres",password="12345678", 
         cursor_factory=RealDictCursor)
-        cur = conn.cursor()
+        cursor = conn.cursor()
         print("Hoorray!!!!! Connection to database established")
         break
     except Exception as error:#Here we place code on what is to happen in case a error occurs
@@ -39,31 +37,6 @@ while True:#infinite loop
 
 
 
-my_posts = [{"title":"title of post 1","content":"Content of post1","id":1},
-            
-            {"title":"title of post 2","content":"Content of post 2","id":2}]
-
-#this returns a post based on a given id since each post has a unique value(id)
-def find_posts(id):
-    for p in my_posts:
-        if p['id'] == id:
-            return p
-
-def find_index_post(id):
-    for i,p in enumerate(my_posts):
-        if p['id'] == id:
-            return i
-
-"""
-fastapi is an asynchronous capable python programming language framework 
-This simply means that a webserver forwards requests to it using the ASGI convention
-Asynchronous Server Gateway interface
-"""
-#...path operation OR route(synonym) in other frameworks
-"""Async here means something that's going to take some amount of time such as making an api call"""
-"""The decorator changes the behaviour of our function so that is acts as an api end point"""
-
-
 #This takes us to the root page of our api http://127.0.0.1:8000
 @app.get("/")
 def root():
@@ -71,11 +44,11 @@ def root():
 #...All this is referred to as a path operation
 
 
-#this takes us to post url http://127.0.0.1:8000/posts it accesses all the posts
+#Get all posts endpoint
 @app.get("/posts")
 def get_posts():
-    cur.execute("""SELECT * FROM posts""")
-    posts = cur.fetchall()
+    cursor.execute("""SELECT * FROM posts""")
+    posts = cursor.fetchall()
     return {"data":posts}
 
 @app.get("/posts/{id}")
@@ -86,17 +59,16 @@ def get_post(id:int):
                             detail=f"post with id: {id} was not found")
     return {"post_detail":post}
 
-#if the post trying to be accessed isn't found, throw a status error
-        #response.status_code = status.HTTP_404_NOT_FOUND#response accesses the status_code property since
-        #return {"message":f"post with id :{id} was not found"}
-        #it's an instance of the Response class, we then equate the status to the status HTTP_404.....
-#http://127.0.0.1:8000/posts 
+#Create posts endpoint
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
-   post_dict = post.dict()#convert sent post to dictionnary first before any further processing
-   post_dict["id"] = randrange(0, 100000000)#when post is sent assign an id to dictionnary post automatically
-   my_posts.append(post_dict)#after assigning id to specific post, go include it in the my_posts list
-   return {"data":post_dict}
+   cursor.execute("""INSERT INTO posts(title,content,published) VALUES(%s, %s, %s) RETURNING * """,
+                  (post.title,post.content,post.published))
+   #post saved in variable
+   new_post = cursor.fetchone()
+   #To save the data, we reference the connection by issuing a commit method    
+   conn.commit()
+   return {"data":new_post}
 
 @app.delete("/posts/{id}", status_code = status.HTTP_204_NO_CONTENT)
 def delete_post(id:int):
@@ -117,25 +89,3 @@ def update_post(id:int, post:Post):
     my_posts[index] = post_dict
     return{"data":post_dict}
 
-    
-
-
-"""
-
-#Created person schema 
-class Person(BaseModel):
-    first_name:str
-    last_name:str
-    email:Optional[str] = None#this is nullable
-    about:str
-
-@app.get("/person")
-def get_person():
-    return {"data":"You've accessd a person"}
-
-@app.post("/person")
-def person(var:Person):
-    my_posts.append(var)
-    print(my_posts)
-    return {"data":var}
-"""
