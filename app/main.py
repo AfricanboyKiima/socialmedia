@@ -14,6 +14,7 @@ import time
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
 
 
+#API schema
 class Post(BaseModel):
     title:str
     content:str
@@ -43,7 +44,7 @@ def root():
 #...All this is referred to as a path operation
 
 
-#this takes us to post url http://127.0.0.1:8000/posts it accesses all the posts
+#Get all posts endpoint
 @app.get("/posts")
 def get_posts():
     cursor.execute("""SELECT * FROM posts""")
@@ -58,11 +59,7 @@ def get_post(id:int):
                             detail=f"post with id: {id} was not found")
     return {"post_detail":post}
 
-#if the post trying to be accessed isn't found, throw a status error
-        #response.status_code = status.HTTP_404_NOT_FOUND#response accesses the status_code property since
-        #return {"message":f"post with id :{id} was not found"}
-        #it's an instance of the Response class, we then equate the status to the status HTTP_404.....
-#http://127.0.0.1:8000/posts 
+#Create posts endpoint
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
    cursor.execute("""INSERT INTO posts(title,content,published) VALUES(%s, %s, %s) RETURNING * """,
