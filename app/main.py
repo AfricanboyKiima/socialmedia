@@ -40,7 +40,7 @@ while True:#infinite loop
 #This takes us to the root page of our api http://127.0.0.1:8000
 @app.get("/")
 def root():
-    return {"message":  "People are not leveraging the power of asking, WELCOME, let me teach you how to ask"}
+    return {"message":  "Welcome to our first lesson on api creation, we are going to learn lots of stuff!!! So grab a cup of coffee and get rolling"}
 #...All this is referred to as a path operation
 
 
@@ -51,13 +51,19 @@ def get_posts():
     posts = cursor.fetchall()
     return {"data":posts}
 
+
+
+
+#Retrieve individual post
 @app.get("/posts/{id}")
 def get_post(id:int):
-    post = find_posts(id)
-    if not post:#if you do not find the post with that specific id then raise an HTTPException
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, 
-                            detail=f"post with id: {id} was not found")
+    cursor.execute(""" SELECT * FROM posts WHERE id = %s """,(str(id)))#we convert the id to a string
+    post = cursor.fetchone()
+    if not post:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist*")
     return {"post_detail":post}
+
+
 
 #Create posts endpoint
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
