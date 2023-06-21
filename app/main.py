@@ -6,15 +6,10 @@ from psycopg2.extras import RealDictCursor
 import time
 
 
-#This post class allows us to post stuff from the frontend based on a well defined schema or data model
-#In such a way a user will only send us the data we defined in the model and nothing else.
-#In addition, we are able to define what datatype of the data we want for each of our properties
-#We achieve such behaviour by inheriting from the BaseModel class imported from the pydantic library
-
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
 
 
-#API schema
+#This post class allows us to post stuff from the frontend based on a well defined schema or data model
 class Post(BaseModel):
     title:str
     content:str
@@ -24,20 +19,20 @@ class Post(BaseModel):
 
 #database connection
 while True:#infinite loop 
-    try: #this is mostly likey going to cause an error so we place code that we suspect could cause an error in the try clause
+    try: 
         conn = psycopg2.connect(host="localhost",database="fastapi",user="postgres",password="12345678", 
         cursor_factory=RealDictCursor)
         cursor = conn.cursor()
         print("Hoorray!!!!! Connection to database established")
         break
-    except Exception as error:#Here we place code on what is to happen in case a error occurs
+    except Exception as error:
         print("Connection to database failed")
         print("Error", error)
         time.sleep(2)
 
 
 
-#This takes us to the root page of our api http://127.0.0.1:8000
+#This is the root end point
 @app.get("/")
 def root():
     return {"message":  "Welcome to our first lesson on api creation, we are going to learn lots of stuff!!! So grab a cup of coffee and get rolling"}
@@ -60,7 +55,7 @@ def get_post(id:int):
     cursor.execute(""" SELECT * FROM posts WHERE id = %s """,(str(id)))#we convert the id to a string
     post = cursor.fetchone()
     if not post:
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist*")
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist")
     return {"post_detail":post}
 
 
@@ -78,10 +73,11 @@ def create_post(post: Post):
 
 @app.delete("/posts/{id}", status_code = status.HTTP_204_NO_CONTENT)
 def delete_post(id:int):
-    index = find_index_post(id)
-    if index == None: 
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id ; {id} doesn't exist")
-    my_posts.pop(index)
+    cursor.execute("""DELETE FROM posts WHERE id = %s RETURNING * """,(str(id),))
+    deleted_post = cursor.fetchone()
+    conn.commit()
+    if deleted_post == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"post with id:{id} does not exist")
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 @app.put("/posts/{id}")
