@@ -52,9 +52,9 @@ def get_posts():
 #Retrieve individual post
 @app.get("/posts/{id}")
 def get_post(id:int):
-    cursor.execute(""" SELECT * FROM posts WHERE id = %s """,(str(id)))#we convert the id to a string
+    cursor.execute(""" SELECT * FROM posts WHERE id = %s """,(str(id),))#we convert the id to a string
     post = cursor.fetchone()
-    if not post:
+    if  post == None:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist")
     return {"post_detail":post}
 
