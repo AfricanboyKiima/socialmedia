@@ -15,3 +15,14 @@ SessionLocal = sessionmaker(autocommit = False, autoflush=False, bind= engine)
 
 #Parent class from which all models will inherit
 Base = declarative_base()
+
+
+#create session dependency function
+def get_db():
+    db = SessionLocal()#instantiate session objects for each user
+    try:
+        yield db
+    finally:
+        db.close()#close session/communication when request is done
+
+
