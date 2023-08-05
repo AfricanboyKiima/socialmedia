@@ -1,24 +1,16 @@
-from fastapi import FastAPI, Response, status, HTTPException
+from fastapi import FastAPI, Response, status, HTTPException, Depends
 from pydantic import BaseModel#we then defined a schema to be able to define what we would want our data to look like
 from typing import Optional#make a field to be nullable
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
-from .database import engine, SessionLocal
+from sqlalchemy.orm import Session
+from .database import engine, SessionLocal,get_db
 from . import models
 
 models.Base.metadata.create_all(bind=engine)#allows us to create database tables
 
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
-
-
-#create session dependency function
-def get_db():
-    db = SessionLocal()#instantiate session objects for each user
-    try:
-        yield db
-    finally:
-        db.close()#close session/communication when request is done
 
 
 
@@ -44,8 +36,9 @@ while True:#infinite loop
         print("Error", error)
         time.sleep(2)
 
-
-
+@app.get("/sqlalchemy")
+def test_posts(db: Session = Depends(get_db)):
+    return {"status":"success"}
 #This is the root end point
 @app.get("/")
 def root():
