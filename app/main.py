@@ -4,9 +4,22 @@ from typing import Optional#make a field to be nullable
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
+from .database import engine, SessionLocal
+from . import models
 
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
+
+
+#dependency 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 
 #This post class allows us to post stuff from the frontend based on a well defined schema or data model
