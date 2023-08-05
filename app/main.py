@@ -7,7 +7,7 @@ import time
 from .database import engine, SessionLocal
 from . import models
 
-models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)#allows us to create database tables
 
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
 
