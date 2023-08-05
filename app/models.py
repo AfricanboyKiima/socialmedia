@@ -4,7 +4,7 @@ from sqlalchemy.sql.expression import Null
 
 
 
-class Post(Base):
+class Post(Base):#post model extends base
     __tablename__ = "posts"
     
     id = Column(Integer, primary_key = True,nullable = False)
