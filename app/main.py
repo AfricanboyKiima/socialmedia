@@ -12,13 +12,14 @@ models.Base.metadata.create_all(bind=engine)#allows us to create database tables
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
 
 
-#dependency 
+#create session dependency function
 def get_db():
-    db = SessionLocal()
+    db = SessionLocal()#instantiate session objects for each user
     try:
         yield db
     finally:
-        db.close()
+        db.close()#close session/communication when request is done
+
 
 
 
