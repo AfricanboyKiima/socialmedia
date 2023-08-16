@@ -5,7 +5,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 from sqlalchemy.orm import Session
-from .database import engine, SessionLocal,get_db
+from .database import engine,get_db
 from . import models
 
 models.Base.metadata.create_all(bind=engine)#allows us to create database tables
