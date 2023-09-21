@@ -17,7 +17,7 @@ SessionLocal = sessionmaker(autocommit = False, autoflush=False, bind= engine)
 Base = declarative_base()
 
 
-#create session dependency function
+#creates a database seesion and returns it
 def get_db():
     db = SessionLocal()#instantiate session objects for each user
     try:
