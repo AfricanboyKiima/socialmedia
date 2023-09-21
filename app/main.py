@@ -38,7 +38,9 @@ while True:#infinite loop
 
 @app.get("/sqlalchemy")
 def test_posts(db: Session = Depends(get_db)):
-    return {"status":"success"}
+    posts = db.query(models.Post).all()
+    return {"data":posts}
+ 
 #This is the root end point
 @app.get("/")
 def root():
