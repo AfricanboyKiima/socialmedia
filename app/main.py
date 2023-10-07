@@ -36,10 +36,7 @@ while True:#infinite loop
         print("Error", error)
         time.sleep(2)
 
-@app.get("/sqlalchemy")
-def test_posts(db: Session = Depends(get_db)):
-    posts = db.query(models.Post).all()
-    return {"data":posts}
+
  
 #This is the root end point
 @app.get("/")
@@ -48,12 +45,12 @@ def root():
 #...All this is referred to as a path operation
 
 
-#Get all posts endpoint
 @app.get("/posts")
-def get_posts():
-    cursor.execute("""SELECT * FROM posts""")
-    posts = cursor.fetchall()
+def test_posts(db: Session = Depends(get_db)):
+    posts = db.query(models.Post).all()
     return {"data":posts}
+
+
 
 
 
