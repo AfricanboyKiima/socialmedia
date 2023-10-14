@@ -46,7 +46,7 @@ def root():
 
 
 @app.get("/posts")
-def test_posts(db: Session = Depends(get_db)):
+def get_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
     return {"data":posts}
 
@@ -68,13 +68,9 @@ def get_post(id:int):
 
 #Create posts endpoint
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
-def create_post(post: Post):
-   cursor.execute("""INSERT INTO posts(title,content,published) VALUES(%s, %s, %s) RETURNING * """,
-                  (post.title,post.content,post.published))
-   #post saved in variable
-   new_post = cursor.fetchone()
-   #To save the data, we reference the connection by issuing a commit method    
-   conn.commit()
+def create_post(post: models.Post , db: Session = Depends(get_db)):
+   new_post = db.add(post)
+   db.commit()
    return {"data":new_post}
 
 @app.delete("/posts/{id}", status_code = status.HTTP_204_NO_CONTENT)
