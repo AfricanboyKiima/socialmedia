@@ -22,20 +22,6 @@ class Post(BaseModel):
     rating: Optional[int] = None#a completely optional field that means it's nullable
 
 
-#database connection
-while True:#infinite loop 
-    try: 
-        conn = psycopg2.connect(host="localhost",database="fastapi",user="postgres",password="12345678", 
-        cursor_factory=RealDictCursor)
-        cursor = conn.cursor()
-        print("Hoorray!!!!! Connection to database established")
-        break
-    except Exception as error:
-        print("Connection to database failed")
-        print("Error", error)
-        time.sleep(2)
-
-
  
 #This is the root end point
 @app.get("/")
