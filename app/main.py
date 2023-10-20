@@ -3,7 +3,6 @@ from pydantic import BaseModel#we then defined a schema to be able to define wha
 from typing import Optional#make a field to be nullable
 import psycopg2
 from psycopg2.extras import RealDictCursor
-import time
 from sqlalchemy.orm import Session
 from .database import engine,get_db
 from . import models
