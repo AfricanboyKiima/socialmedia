@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from .database import engine,get_db
 from . import models
 
-models.Base.metadata.create_all(bind=engine)#allows us to create database tables
+models.Base.metadata.create_all(bind=engine)#allows us to implement the database tables
 
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
 
