@@ -36,6 +36,16 @@ def get_posts(db: Session = Depends(get_db)):
     return {"data":posts}
 
 
+
+#Get individual post
+@app.get("/posts/{id}")
+def get_post(id: int, db:Session = Depends(get_db)):
+    post = db.query(models.Post).filter(models.Post.id == id).first()
+    if post is None:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f"post with id {id} doesn't exist")
+    return {"data": post}
+
+
 #Create posts
 @app.post("/posts",status_code=status.HTTP_201_CREATED)
 def create_post(post:Post, db:Session= Depends(get_db)):
