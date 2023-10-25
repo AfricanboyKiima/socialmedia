@@ -43,4 +43,4 @@ def create_post(post:Post, db:Session= Depends(get_db)):
     db.add(new_post)#add post to database table
     db.commit()
     db.refresh(new_post)
-    return {"data":new_post}                                                                                                                                                                                                                               
+    return {"data":new_post}                                                                                                                                                                                                                             
