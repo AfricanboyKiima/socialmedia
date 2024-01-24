@@ -53,4 +53,15 @@ def create_post(post:Post, db:Session= Depends(get_db)):
     db.add(new_post)#add post to database table
     db.commit()
     db.refresh(new_post)
-    return {"data":new_post}                                                                                                                                                                                                                             
+    return {"data":new_post}         
+
+
+#Delete individual post
+@app.delete("/posts/{id}",status_code = status.HTTP_204_NO_CONTENT) 
+def delete_post(id:int, db:Session = Depends(get_db)):
+    post = db.query(models.Post).filter(models.Post.id ==id)
+    if post.first() is None:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f"posts with id {id} doesn't exist")
+    db.delete(post)
+    db.commit()
+    return Response(status_code = status.HTTP_204_NO_CONTENT)
