@@ -49,7 +49,7 @@ def get_post(id: int, db:Session = Depends(get_db)):
 #Create posts
 @app.post("/posts",status_code=status.HTTP_201_CREATED)
 def create_post(post:Post, db:Session= Depends(get_db)):
-    new_post = models.Post(title=post.title, content=post.content, published=post.published)
+    new_post = models.Post(**post.dict())
     db.add(new_post)#add post to database table
     db.commit()
     db.refresh(new_post)
