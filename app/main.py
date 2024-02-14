@@ -5,20 +5,11 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from sqlalchemy.orm import Session
 from .database import engine,get_db
-from . import models
+from . import models, schemas
 
 models.Base.metadata.create_all(bind=engine)#allows us to implement the database tables
 
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
-
-
-
-
-#This post class allows us to post stuff from the frontend based on a well defined schema or data model
-class Post(BaseModel):
-    title:str
-    content:str
-    published : bool = True
 
 
  
@@ -48,7 +39,7 @@ def get_post(id: int, db:Session = Depends(get_db)):
 
 #Create posts
 @app.post("/posts",status_code=status.HTTP_201_CREATED)
-def create_post(post:Post, db:Session= Depends(get_db)):
+def create_post(post:schemas.PostCreate, db:Session= Depends(get_db)):
     new_post = models.Post(**post.dict())
     db.add(new_post)#add post to database table
     db.commit()
@@ -68,7 +59,7 @@ def delete_post(id:int, db:Session = Depends(get_db)):
 
 
 @app.put("/posts/{id}")
-def update_post(id:int, updated_post:Post, db:Session = Depends(get_db)):
+def update_post(id:int, updated_post:schemas.PostCreate, db:Session = Depends(get_db)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
     if post is None:
