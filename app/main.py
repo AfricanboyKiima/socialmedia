@@ -5,20 +5,11 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from sqlalchemy.orm import Session
 from .database import engine,get_db
-from . import models
+from . import models, schemas
 
 models.Base.metadata.create_all(bind=engine)#allows us to implement the database tables
 
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods
-
-
-
-
-#This post class allows us to post stuff from the frontend based on a well defined schema or data model
-class Post(BaseModel):
-    title:str
-    content:str
-    published : bool = True
 
 
  
@@ -48,8 +39,8 @@ def get_post(id: int, db:Session = Depends(get_db)):
 
 #Create posts
 @app.post("/posts",status_code=status.HTTP_201_CREATED)
-def create_post(post:Post, db:Session= Depends(get_db)):
-    new_post = models.Post(title=post.title, content=post.content, published=post.published)
+def create_post(post:schemas.PostCreate, db:Session= Depends(get_db)):
+    new_post = models.Post(**post.dict())
     db.add(new_post)#add post to database table
     db.commit()
     db.refresh(new_post)
@@ -62,6 +53,17 @@ def delete_post(id:int, db:Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id ==id)
     if post.first() is None:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f"posts with id {id} doesn't exist")
-    db.delete(post)
+    post.delete(synchronize_session=False)
     db.commit()
     return Response(status_code = status.HTTP_204_NO_CONTENT)
+
+
+@app.put("/posts/{id}")
+def update_post(id:int, updated_post:schemas.PostCreate, db:Session = Depends(get_db)):
+    post_query = db.query(models.Post).filter(models.Post.id == id)
+    post = post_query.first()
+    if post is None:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f"Post with id{id} doesn't exist")
+    post_query.update(updated_post.dict(),synchronize_session=False)
+    db.commit()
+    return {"data":post_query.first()}
