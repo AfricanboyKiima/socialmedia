@@ -21,7 +21,7 @@ def root():
 
 
 #Get posts
-@app.get("/posts")
+@app.get("/posts",response_model=schemas.PostResponse)
 def get_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
     return posts
@@ -29,7 +29,7 @@ def get_posts(db: Session = Depends(get_db)):
 
 
 #Get individual post
-@app.get("/posts/{id}")
+@app.get("/posts/{id}",response_model=schemas.PostResponse)
 def get_post(id: int, db:Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     if post is None:
@@ -38,7 +38,7 @@ def get_post(id: int, db:Session = Depends(get_db)):
 
 
 #Create posts
-@app.post("/posts",status_code=status.HTTP_201_CREATED)
+@app.post("/posts",status_code=status.HTTP_201_CREATED,response_model=schemas.PostResponse)
 def create_post(post:schemas.PostCreate, db:Session= Depends(get_db)):
     new_post = models.Post(**post.dict())
     db.add(new_post)#add post to database table
@@ -58,8 +58,8 @@ def delete_post(id:int, db:Session = Depends(get_db)):
     return Response(status_code = status.HTTP_204_NO_CONTENT)
 
 
-@app.put("/posts/{id}")
-def update_post(id:int, updated_post:schemas.PostCreate, db:Session = Depends(get_db)):
+@app.put("/posts/{id}", response_model=schemas.PostResponse)
+def update_post(id:int, updated_post:schemas.PostCreate, db:Session = Depends(get_db), ):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
     if post is None:
