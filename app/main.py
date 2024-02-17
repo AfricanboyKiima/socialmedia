@@ -24,7 +24,7 @@ def root():
 @app.get("/posts")
 def get_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
-    return {"data":posts}
+    return posts
 
 
 
@@ -34,7 +34,7 @@ def get_post(id: int, db:Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     if post is None:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f"post with id {id} doesn't exist")
-    return {"data": post}
+    return post
 
 
 #Create posts
@@ -44,7 +44,7 @@ def create_post(post:schemas.PostCreate, db:Session= Depends(get_db)):
     db.add(new_post)#add post to database table
     db.commit()
     db.refresh(new_post)
-    return {"data":new_post}         
+    return new_post         
 
 
 #Delete individual post
@@ -66,4 +66,4 @@ def update_post(id:int, updated_post:schemas.PostCreate, db:Session = Depends(ge
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f"Post with id{id} doesn't exist")
     post_query.update(updated_post.dict(),synchronize_session=False)
     db.commit()
-    return {"data":post_query.first()}
+    return post_query.first()
