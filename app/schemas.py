@@ -14,11 +14,8 @@ class PostCreate(PostBase):
 
 
 #Defines structure of how data should be sent to the user or how a response should be structured
-class PostResponse(BaseModel):
+class PostResponse(PostBase):
     id:int
-    title:str
-    content:str
-    published:bool
     created_at:datetime
 
     class Config:
