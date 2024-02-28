@@ -1,5 +1,6 @@
 #Schemas define the structure of requests and responses
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class PostBase(BaseModel):
@@ -18,6 +19,7 @@ class PostResponse(BaseModel):
     title:str
     content:str
     published:bool
+    created_at:datetime
 
     class Config:
         orm_mode = True# pydantic's orm_mode tells the pydantinc model to read the data even if it's not a dict
