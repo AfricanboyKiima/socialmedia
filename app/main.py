@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends
 from pydantic import BaseModel#we then defined a schema to be able to define what we would want our data to look like
-from typing import Optional#make a field to be nullable
+from typing import List#make a field to be nullable
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from sqlalchemy.orm import Session
@@ -21,7 +21,7 @@ def root():
 
 
 #Get posts
-@app.get("/posts",response_model=schemas.PostResponse)
+@app.get("/posts",response_model = List[schemas.PostResponse])
 def get_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
     return posts
