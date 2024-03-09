@@ -20,3 +20,21 @@ class PostResponse(PostBase):
 
     class Config:
         orm_mode = True# pydantic's orm_mode tells the pydantinc model to read the data even if it's not a dict
+
+
+
+#My user schema
+class UserBase(BaseModel):
+    email:str
+    password:str
+
+
+
+class UserCreate(UserBase):
+    pass
+
+
+class UserResponse(UserBase):
+    created_at:datetime
+    class Config:
+        orm_mode = True
