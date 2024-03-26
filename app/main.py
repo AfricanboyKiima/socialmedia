@@ -73,12 +73,12 @@ def update_post(id:int, updated_post:schemas.PostCreate, db:Session = Depends(ge
 
 @app.get("/users",response_model=List[schemas.UserResponse])
 def get_users(db:Session = Depends(get_db)):
-    users = db.query(models.Post).all()
+    users = db.query(models.User).all()
     return users
 
 @app.get("/users/{id}",response_model= schemas.UserResponse)
 def get_user(id:int, db:Session = Depends(get_db)):
-    user = db.query(models.Post).filter(models.Post.id == id).first()
+    user = db.query(models.User).filter(models.User.id == id).first()
     if user is None:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,detail="user with id {id} doesn't exist ")
     return user
@@ -91,4 +91,5 @@ def create_user(user:schemas.UserCreate,db:Session=Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     return new_user
+
 
