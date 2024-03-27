@@ -1,5 +1,5 @@
 #Schemas define the structure of requests and responses
-from pydantic import BaseModel
+from pydantic import BaseModel,EmailStr
 from datetime import datetime
 
 
@@ -25,17 +25,22 @@ class PostResponse(PostBase):
 
 #My user schema
 class UserBase(BaseModel):
-    email:str
+    email:EmailStr
     password:str
 
 
 
-class UserCreate(UserBase):
+class UserCreate(UserBase):#used to create users
     pass
 
 
-class UserResponse(BaseModel):
+class UserUpdate(UserBase):#used to update user data
+    pass
+
+
+class UserResponse(BaseModel):#defines structure of data to the frontend
     created_at:datetime
-    email:str
+    email:EmailStr
+    
     class Config:
         orm_mode = True
