@@ -34,7 +34,8 @@ class UserCreate(UserBase):
     pass
 
 
-class UserResponse(UserBase):
+class UserResponse(BaseModel):
     created_at:datetime
+    email:str
     class Config:
         orm_mode = True
