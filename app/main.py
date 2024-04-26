@@ -1,7 +1,5 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends
-from pydantic import BaseModel#we then defined a schema to be able to define what we would want our data to look like
 from typing import List#make a field to be nullable
-import psycopg2
 from psycopg2.extras import RealDictCursor
 from sqlalchemy.orm import Session
 from .database import engine,get_db
