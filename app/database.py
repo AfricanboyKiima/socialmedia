@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 
-SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:12345678@localhost/fastapi'
+SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:12345678@localhost/socialmedia_app'
 
 
 #The engine allows us to connect sqlalchemy as an orm to our database in postgresql
