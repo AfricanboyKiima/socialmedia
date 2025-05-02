@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends
 from typing import List#make a field to be nullable
-from psycopg2.extras import RealDictCursor
 from sqlalchemy.orm import Session
 from .database import engine,get_db
 from . import models, schemas
+from passlib.context import CryptContext
 
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated = "auto")#We are defining the default hashing algorithm
 models.Base.metadata.create_all(bind=engine)#allows us to implement the database tables
 
 app = FastAPI() #Instantiate object from the FASTAPI class(model) to access its attributes and methods

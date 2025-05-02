@@ -39,7 +39,6 @@ class UserUpdate(UserBase):#used to update user data
 
 class UserResponse(BaseModel):#defines structure of data to the frontend
     id:int
-    created_at:datetime
     email:EmailStr
     
     class Config:
