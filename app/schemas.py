@@ -40,6 +40,7 @@ class UserUpdate(UserBase):#used to update user data
 class UserResponse(BaseModel):#defines structure of data to the frontend
     id:int
     email:EmailStr
+    created_at: datetime
     
     class Config:
         orm_mode = True
