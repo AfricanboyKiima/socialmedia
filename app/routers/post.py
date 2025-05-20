@@ -1,6 +1,6 @@
 from fastapi import status, HTTPException,Depends, APIRouter, Response
 from sqlalchemy.orm import Session
-from .. import schemas, models,database
+from .. import schemas, models
 from typing import List
 from app.database import get_db
 
@@ -12,7 +12,7 @@ router = APIRouter(
 #Get posts
 
 @router.get("/",response_model = List[schemas.PostResponse])
-def get_posts(db: Session = Depends(database.get_db)):
+def get_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
     return posts
 
