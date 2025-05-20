@@ -6,15 +6,17 @@ from app.utils import *
 from typing import List
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/users"
+)
 
-@router.get("/users",response_model=List[schemas.UserResponse])
+@router.get("/",response_model=List[schemas.UserResponse])
 def get_users(db:Session = Depends(get_db)):
     users = db.query(models.User).all()
     return users
 
 
-@router.get("/users/{id}",response_model= schemas.UserResponse)
+@router.get("/{id}",response_model= schemas.UserResponse)
 def get_user(id:int, db:Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id).first()
     if user is None:
@@ -22,7 +24,7 @@ def get_user(id:int, db:Session = Depends(get_db)):
     return user
 
 
-@router.post("/users",status_code = status.HTTP_201_CREATED,response_model=schemas.UserResponse)
+@router.post("/",status_code = status.HTTP_201_CREATED,response_model=schemas.UserResponse)
 def create_user(user:schemas.UserCreate,db:Session=Depends(get_db)):
     existing_user = db.query(models.User).filter(models.User.email == user.email).first()
     if existing_user:
@@ -35,7 +37,7 @@ def create_user(user:schemas.UserCreate,db:Session=Depends(get_db)):
     return new_user
 
 
-@router.delete("/users/{id}",status_code= status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}",status_code= status.HTTP_204_NO_CONTENT)
 def delete_user(id:int, db:Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id)
     if user.first() is None:
@@ -45,7 +47,7 @@ def delete_user(id:int, db:Session = Depends(get_db)):
     return Response(status_code= status.HTTP_204_NO_CONTENT)
 
 
-@router.put("/users/{id}", response_model=schemas.UserResponse)
+@router.put("/{id}", response_model=schemas.UserResponse)
 def update_user(id:int, updated_user:schemas.UserUpdate, db:Session=Depends(get_db)):
     user_query = db.query(models.User).filter(models.User.id == id)
     user = user_query.first()
