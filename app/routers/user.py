@@ -7,7 +7,8 @@ from typing import List
 
 
 router = APIRouter(
-    prefix="/users"
+    prefix="/users",
+    tags=['Users'] #Used to group user endpoint routes in one place
 )
 
 @router.get("/",response_model=List[schemas.UserResponse])
