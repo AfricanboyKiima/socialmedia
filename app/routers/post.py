@@ -6,7 +6,8 @@ from app.database import get_db
 
 
 router = APIRouter(
-    prefix="/posts"
+    prefix="/posts",
+    tags=['Posts'] #used to group posts endpoints routes in one place 
 )
 
 #Get posts
