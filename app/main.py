@@ -1,9 +1,8 @@
 from fastapi import FastAPI
-from . import database
-from . import models
+from . import database,models
 from .routers import post,user
+models.Base.metadata.create_all(bind = database.engine)
 
-models.Base.metadata.create_all(bind = database.engine)#allows us to implement the database tables
 
 app = FastAPI() 
 
