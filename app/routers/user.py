@@ -52,7 +52,7 @@ def delete_user(id:int, db:Session = Depends(get_db)):
 
 @router.put("/{id}", response_model=schemas.UserResponse)
 def update_user(id:int, updated_user:schemas.UserUpdate, db:Session=Depends(get_db)):
-    user_query = db.query(models.User).filter(models.User.id == id)
+    user_query = db.query(models.users.User).filter(models.users.User.user_id == id)
     user = user_query.first()
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"user with id {id} doesn't exist")
