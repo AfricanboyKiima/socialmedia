@@ -9,5 +9,5 @@ def password_hasher(password:str):
     return hashed_password
 
 def verify(plain_password, hashed_password):
-    verified_passwords = pwd_context.verify(plain_password, hashed_password)
-    return verified_passwords
+    verified_password = pwd_context.verify(plain_password, hashed_password)
+    return verified_password
