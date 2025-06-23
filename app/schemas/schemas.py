@@ -10,12 +10,12 @@ class PostBase(BaseModel):
 
 #Defines structure of how data should be sent from the frontend
 class PostCreate(PostBase):
-    pass #helps avoid errors in our class 
+    user_id:int
 
 
 #Defines structure of how data should be sent to the user or how a response should be structured
 class PostResponse(PostBase):
-    id:int
+    post_id:int
     created_at:datetime
 
     class Config:
@@ -35,13 +35,20 @@ class UserCreate(UserBase):#used to create users
 
 
 class UserUpdate(UserBase):#used to update user data
-    pass
+    user_id:int
+    
 
 
 class UserResponse(BaseModel):#defines structure of data to the frontend
-    id:int
+    user_id:int
     email:EmailStr
     created_at: datetime
     
     class Config:
         orm_mode = True
+
+
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
