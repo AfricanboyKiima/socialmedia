@@ -1,7 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Response
-
-from app.schemas import schemas
-
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from app.database import database
 
 from app import models
@@ -15,9 +13,9 @@ router = APIRouter(
 
 
 @router.post("/login")
-def login(user_credential:schemas.UserLogin, db:Session = Depends(database.get_db)):
+def login(user_credential:OAuth2PasswordRequestForm = Depends(), db:Session = Depends(database.get_db)):
 
-    user = db.query(models.users.User).filter(models.users.User.email == user_credential.email).first()
+    user = db.query(models.users.User).filter(models.users.User.email == user_credential.username).first()
 
     if not user:
         raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail = "Invalid credentials")
